@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Οριακή Ταχύτητα – Προσομοίωση</title>
 
   <!-- p5.js -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
-
-  <!-- sketch -->
-  <script defer src="sketch.js"></script>
+  <script src="sketch.js"></script>
 
   <style>
-    /* === Reset === */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
     body {
@@ -27,14 +24,14 @@
       justify-content: center;
     }
 
-    /* === Κεντρικό container === */
+    /* ===============================
+       ΚΟΙΝΟ CONTAINER
+       =============================== */
     .app {
       width: 100%;
-      max-width: 1000px;
       padding: 12px;
     }
 
-    /* === Χώρος canvas === */
     #sketch-holder {
       width: 100%;
       display: flex;
@@ -42,52 +39,44 @@
     }
 
     canvas {
-      width: 100% !important;   /* responsive scaling */
-      height: auto !important;
+      display: block;
+      width: 100%;
+      height: auto;
       border-radius: 8px;
     }
 
-    /* === Χώρος χειριστηρίων === */
-    .controls {
-      margin-top: 12px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
+    /* ===============================
+       LAYOUT B – COMPACT (default)
+       Για tablet / μικρά laptop
+       =============================== */
+    .app {
+      max-width: 1000px;
     }
 
-    .controls button {
-      padding: 6px 14px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .controls label {
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    /* === Μικρές οθόνες === */
-    @media (max-width: 600px) {
-      .controls {
-        gap: 8px;
+    /* ===============================
+       LAYOUT A – CLASSROOM / PROJECTOR
+       Για μεγάλες οθόνες
+       =============================== */
+    @media (min-width: 1200px) {
+      body {
+        justify-content: center;
       }
 
-      .controls button {
-        font-size: 13px;
-        padding: 6px 10px;
+      .app {
+        max-width: 1400px;   /* γεμίζει οπτικά την οθόνη */
+      }
+
+      canvas {
+        width: 100%;
       }
     }
+
   </style>
 </head>
 
 <body>
   <div class="app">
-    <!-- Το p5 canvas θα μπει εδώ -->
     <div id="sketch-holder"></div>
-
-    <!-- Τα κουμπιά/checks τα δημιουργεί το sketch.js
-         και μπαίνουν αυτόματα κάτω από το canvas -->
   </div>
 </body>
 </html>
