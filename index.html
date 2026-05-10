@@ -42,6 +42,8 @@
       margin-top: 0;
     }
 
+    /* ===== ΥΠΟΜΝΗΜΑ ===== */
+
     .legend-row {
       display: flex;
       align-items: center;
@@ -50,6 +52,7 @@
       font-size: 14px;
     }
 
+    /* ΒΕΛΟΣ (με arrowhead) */
     .arrow {
       width: 24px;
       height: 2px;
@@ -73,6 +76,14 @@
     .red { background: red; }
     .red::after { border-left-color: red; }
 
+    /* ΜΑΥΡΗ ΓΡΑΜΜΗ ΧΩΡΙΣ ARROWHEAD */
+    .line {
+      width: 24px;
+      height: 2px;
+      background: black;
+    }
+
+    /* Χειριστήρια */
     .controls button {
       margin-right: 8px;
       padding: 6px 10px;
@@ -81,7 +92,9 @@
     }
 
     @media (max-width: 1000px) {
-      .app { grid-template-columns: 1fr; }
+      .app {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -103,16 +116,29 @@
 
     <div class="panel">
       <h3>ΥΠΟΜΝΗΜΑ</h3>
-      <div class="legend-row"><div class="arrow green"></div> Προωστική δύναμη</div>
-      <div class="legend-row"><div class="arrow red"></div> Αντίσταση νερού</div>
-      <div class="legend-row">✓ Οριακή ταχύτητα</div>
-      <div class="legend-row"><div class="arrow"></div> Σταθερή απόσταση</div>
+
+      <div class="legend-row">
+        <div class="arrow green"></div> Προωστική δύναμη
+      </div>
+
+      <div class="legend-row">
+        <div class="arrow red"></div> Αντίσταση νερού
+      </div>
+
+      <div class="legend-row">
+        ✓ Οριακή ταχύτητα
+      </div>
+
+      <div class="legend-row">
+        <div class="line"></div> Σταθερή απόσταση
+      </div>
     </div>
 
     <div class="panel controls">
       <button id="playBtn">▶ Play</button>
       <button id="resumeBtn" disabled>▶ Resume</button>
       <button id="resetBtn">⟲ Reset</button><br><br>
+
       <label>
         <input type="checkbox" id="forcesChk" checked>
         Εμφάνιση δυνάμεων
@@ -122,7 +148,7 @@
   </div>
 </div>
 
-<!-- ✅ ΣΩΣΤΟ LOAD -->
+<!-- ✅ ΣΩΣΤΗ ΦΟΡΤΩΣΗ SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
 <script src="sketch.js"></script>
 
