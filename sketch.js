@@ -207,7 +207,7 @@ function resetSim() {
 
 function updateInfo() {
   document.getElementById("info").innerHTML = `
-    <p style="color:#4285f4">■ Ελαφρύ: m=2</p>
-    <p style="color:#ff5a52">■ Βαρύ: m=6</p>
+    <p style="color:#4285f4">■ Ελαφρύ: m=2 Kg</p>
+    <p style="color:#ff5a52">■ Βαρύ: m=6 Kg</p>
   `;
 }
