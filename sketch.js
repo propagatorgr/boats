@@ -1,31 +1,41 @@
-// ===== ΚΑΤΑΣΤΑΣΗ =====
 let boats = [];
 let running = false;
 let phase = "ACCELERATION"; // ACCELERATION, PAUSED, RESUME, FINISHED
 let showForces = true;
 
-// ===== ΣΤΑΘΕΡΕΣ =====
 const START_X = 60;
 const FINISH_X = 720;
 const BOAT_W = 42;
-const dt = 0.25;
 
+const dt = 0.25;
 const F_DRIVE = 0.4;
 const DRAG_K  = 0.02;
 
-// Κριτήριο οριακής: σταθεροποίηση ταχύτητας
 const DV_EPS = 0.002;
 const V_MIN  = 0.5;
 
-// ===== p5 =====
 function setup() {
   const c = createCanvas(820, 420);
   c.parent("sketch-holder");
 
-  // HTML χειριστήρια (ΟΧΙ p5 UI)
-  document.getElementById("playBtn").onclick  = () => { running = true; };
+  document.getElementById("playBtn").onclick = () => {
+    if (phase !== "PAUSED") {
+      running = true;
+    }
+  };
+
+  document.getElementById("resumeBtn").onclick = () => {
+    if (phase === "PAUSED") {
+      phase = "RESUME";
+      running = true;
+      document.getElementById("resumeBtn").disabled = true;
+    }
+  };
+
   document.getElementById("resetBtn").onclick = resetSim;
-  document.getElementById("forcesChk").onchange = e => showForces = e.target.checked;
+
+  document.getElementById("forcesChk").onchange =
+    e => showForces = e.target.checked;
 
   resetSim();
 }
@@ -38,13 +48,14 @@ function draw() {
   if (running && phase !== "FINISHED" && phase !== "PAUSED") {
     boats.forEach(b => b.update());
 
-    // 1) Pause όταν ΚΑΙ ΤΑ ΔΥΟ έχουν οριακή
+    // PAUSE στην οριακή (και τα δύο)
     if (phase === "ACCELERATION" && boats.every(b => b.terminalReached)) {
       phase = "PAUSED";
       running = false;
+      document.getElementById("resumeBtn").disabled = false;
     }
 
-    // 2) Τελικός τερματισμός όταν ΚΑΙ ΤΑ ΔΥΟ τελειώσουν
+    // ΤΕΛΙΚΟ ΣΤΑΜΑΤΗΜΑ
     if (boats.every(b => b.finished)) {
       running = false;
       phase = "FINISHED";
@@ -53,7 +64,6 @@ function draw() {
 
   boats.forEach(b => b.draw());
 
-  // γραμμή σταθερής απόστασης μετά την παύση
   if (phase === "PAUSED" || phase === "RESUME") {
     drawDistanceLine();
   }
@@ -61,7 +71,8 @@ function draw() {
   updateInfo();
 }
 
-// ===== ΚΛΑΣΗ ΒΑΡΚΑΣ =====
+/* ================= BOAT ================= */
+
 class Boat {
   constructor(y, m, col) {
     this.x = START_X;
@@ -81,7 +92,6 @@ class Boat {
 
     this.vPrev = this.v;
 
-    // Ατομικός τερματισμός στο ΤΕΡΜΑ
     if (this.x + BOAT_W >= FINISH_X) {
       this.x = FINISH_X - BOAT_W;
       this.v = 0;
@@ -89,26 +99,25 @@ class Boat {
       return;
     }
 
-    const drag  = -DRAG_K * this.v * abs(this.v);
+    const drag  = -DRAG_K * this.v * Math.abs(this.v);
     const force = F_DRIVE + drag;
     const a     = force / this.m;
 
     this.v += a * dt;
     this.x += this.v * dt;
 
-    // Ανίχνευση οριακής (Δv≈0)
-    if (!this.terminalReached && abs(this.v - this.vPrev) < DV_EPS && abs(this.v) > V_MIN) {
+    if (!this.terminalReached &&
+        Math.abs(this.v - this.vPrev) < DV_EPS &&
+        Math.abs(this.v) > V_MIN) {
       this.terminalReached = true;
     }
   }
 
   draw() {
-    // σώμα
     noStroke();
     fill(this.col);
     rect(this.x, this.y - 10, BOAT_W, 20, 6);
 
-    // σήμα οριακής
     if (this.terminalReached) {
       push();
       translate(this.x + BOAT_W / 2, this.y);
@@ -122,24 +131,22 @@ class Boat {
       pop();
     }
 
-    // δυνάμεις
     if (showForces && phase !== "PAUSED" && !this.finished) {
       push();
       translate(this.x + BOAT_W / 2, this.y);
 
-      // Προώθηση (πράσινη →)
       drawArrow(0, -26,  F_DRIVE * 120, color(0,160,0));
 
-      // Αντίσταση (κόκκινη ←)
       if (this.v > 0.05) {
-        drawArrow(0, -26, -DRAG_K * this.v * abs(this.v) * 120, color(220,0,0));
+        drawArrow(0, -26, -DRAG_K * this.v * Math.abs(this.v) * 120, color(220,0,0));
       }
       pop();
     }
   }
 }
 
-// ===== ΒΟΗΘΗΤΙΚΑ =====
+/* ============== HELPERS ============== */
+
 function drawArrow(x, y, len, col) {
   stroke(col);
   strokeWeight(2);
@@ -187,6 +194,7 @@ function resetSim() {
   ];
   running = false;
   phase = "ACCELERATION";
+  document.getElementById("resumeBtn").disabled = true;
 }
 
 function updateInfo() {
