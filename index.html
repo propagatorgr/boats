@@ -1,82 +1,164 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Οριακή Ταχύτητα – Προσομοίωση</title>
+  <title>Οριακή Ταχύτητα</title>
 
   <!-- p5.js -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
-  <script src="sketch.js"></script>
+  <script src="sketch.js" defer></script>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: system-ui, Arial, sans-serif;
     }
 
     body {
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
+      margin: 0;
+      background:#f2f2f2;
     }
 
-    /* ===============================
-       ΚΟΙΝΟ CONTAINER
-       =============================== */
+    /* ===== ΚΥΡΙΟ LAYOUT ===== */
     .app {
-      width: 100%;
-      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 16px;
+      max-width: 1400px;
+      margin: auto;
+      padding: 16px;
+      align-items: start;
     }
 
+    /* ===== CANVAS ===== */
     #sketch-holder {
-      width: 100%;
       display: flex;
       justify-content: center;
+      align-items: center;
     }
 
     canvas {
-      display: block;
-      width: 100%;
-      height: auto;
       border-radius: 8px;
     }
 
-    /* ===============================
-       LAYOUT B – COMPACT (default)
-       Για tablet / μικρά laptop
-       =============================== */
-    .app {
-      max-width: 1000px;
+    /* ===== PANEL ===== */
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
     }
 
-    /* ===============================
-       LAYOUT A – CLASSROOM / PROJECTOR
-       Για μεγάλες οθόνες
-       =============================== */
-    @media (min-width: 1200px) {
-      body {
-        justify-content: center;
-      }
+    .panel h3 {
+      margin-top: 0;
+      font-size: 16px;
+    }
 
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .box {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+
+    .blue { background:#4285f4; }
+    .red { background:#ff5a52; }
+
+    .arrow {
+      width: 26px;
+      height: 2px;
+      background: black;
+      position: relative;
+    }
+
+    .arrow::after {
+      content:'';
+      position:absolute;
+      right:-6px;
+      top:-4px;
+      border-left:6px solid black;
+      border-top:5px solid transparent;
+      border-bottom:5px solid transparent;
+    }
+
+    .green { background:#008000; }
+    .green::after { border-left-color:#008000; }
+
+    .red-arrow { background:#c40000; }
+    .red-arrow::after { border-left-color:#c40000; }
+
+    /* ===== CONTROLS ===== */
+    .controls button {
+      margin-right: 8px;
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1000px) {
       .app {
-        max-width: 1400px;   /* γεμίζει οπτικά την οθόνη */
-      }
-
-      canvas {
-        width: 100%;
+        grid-template-columns: 1fr;
       }
     }
-
   </style>
 </head>
 
 <body>
+
   <div class="app">
+
+    <!-- CANVAS -->
     <div id="sketch-holder"></div>
+
+    <!-- PANELS -->
+    <div>
+
+      <div class="panel">
+        <h3>ΣΤΟΙΧΕΙΑ</h3>
+        <div id="info"></div>
+      </div>
+
+      <div class="panel">
+        <h3>ΥΠΟΜΝΗΜΑ</h3>
+
+        <div class="legend-row">
+          <div class="arrow green"></div> Προωστική δύναμη
+        </div>
+
+        <div class="legend-row">
+          <div class="arrow red-arrow"></div> Αντίσταση νερού
+        </div>
+
+        <div class="legend-row">
+          ✓ Οριακή ταχύτητα
+        </div>
+
+        <div class="legend-row">
+          <div class="arrow"></div> Σταθερή απόσταση
+        </div>
+      </div>
+
+      <div class="panel controls">
+        <button id="playBtn">▶ Play</button>
+        <button id="resumeBtn" disabled>▶ Resume</button>
+        <button id="resetBtn">⟲ Reset</button><br><br>
+        <label>
+          <input type="checkbox" id="forcesChk" checked>
+          Εμφάνιση δυνάμεων
+        </label>
+      </div>
+
+    </div>
   </div>
+
 </body>
 </html>
