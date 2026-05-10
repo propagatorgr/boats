@@ -5,12 +5,13 @@ let showForces = true;
 
 const START_X = 60;
 const FINISH_X = 720;
-const BOAT_W = 42;
+const BOAT_W  = 42;
 
 const dt = 0.25;
 const F_DRIVE = 0.4;
 const DRAG_K  = 0.02;
 
+// Κριτήριο οριακής ταχύτητας (σταθεροποίηση)
 const DV_EPS = 0.002;
 const V_MIN  = 0.5;
 
@@ -18,10 +19,9 @@ function setup() {
   const c = createCanvas(820, 420);
   c.parent("sketch-holder");
 
+  // HTML χειριστήρια (ΟΧΙ p5 UI)
   document.getElementById("playBtn").onclick = () => {
-    if (phase !== "PAUSED") {
-      running = true;
-    }
+    if (phase !== "PAUSED") running = true;
   };
 
   document.getElementById("resumeBtn").onclick = () => {
@@ -33,7 +33,6 @@ function setup() {
   };
 
   document.getElementById("resetBtn").onclick = resetSim;
-
   document.getElementById("forcesChk").onchange =
     e => showForces = e.target.checked;
 
@@ -45,25 +44,27 @@ function draw() {
   drawWater();
   drawFinishLine();
 
-  if (running && phase !== "FINISHED" && phase !== "PAUSED") {
+  // ===== ΕΝΗΜΕΡΩΣΗ ΚΙΝΗΣΗΣ =====
+  if (running && phase !== "PAUSED" && phase !== "FINISHED") {
     boats.forEach(b => b.update());
 
-    // PAUSE στην οριακή (και τα δύο)
-    if (phase === "ACCELERATION" && boats.every(b => b.terminalReached)) {
-      phase = "PAUSED";
-      running = false;
-      document.getElementById("resumeBtn").disabled = false;
-    }
-
-    // ΤΕΛΙΚΟ ΣΤΑΜΑΤΗΜΑ
+    // Τελικός τερματισμός όταν όλα τελειώσουν
     if (boats.every(b => b.finished)) {
       running = false;
       phase = "FINISHED";
     }
   }
 
+  // ===== ΕΛΕΓΧΟΣ ΟΡΙΑΚΗΣ (ΠΑΝΤΑ) =====
+  if (phase === "ACCELERATION" && boats.every(b => b.terminalReached)) {
+    phase = "PAUSED";
+    running = false;
+    document.getElementById("resumeBtn").disabled = false;
+  }
+
   boats.forEach(b => b.draw());
 
+  // Σταθερή απόσταση μετά το PAUSE
   if (phase === "PAUSED" || phase === "RESUME") {
     drawDistanceLine();
   }
@@ -92,6 +93,7 @@ class Boat {
 
     this.vPrev = this.v;
 
+    // Ατομικός τερματισμός
     if (this.x + BOAT_W >= FINISH_X) {
       this.x = FINISH_X - BOAT_W;
       this.v = 0;
@@ -106,6 +108,7 @@ class Boat {
     this.v += a * dt;
     this.x += this.v * dt;
 
+    // Ανίχνευση οριακής (Δv≈0)
     if (!this.terminalReached &&
         Math.abs(this.v - this.vPrev) < DV_EPS &&
         Math.abs(this.v) > V_MIN) {
@@ -114,10 +117,12 @@ class Boat {
   }
 
   draw() {
+    // Σώμα
     noStroke();
     fill(this.col);
     rect(this.x, this.y - 10, BOAT_W, 20, 6);
 
+    // Σήμα οριακής
     if (this.terminalReached) {
       push();
       translate(this.x + BOAT_W / 2, this.y);
@@ -131,12 +136,15 @@ class Boat {
       pop();
     }
 
+    // Δυνάμεις (με arrowheads)
     if (showForces && phase !== "PAUSED" && !this.finished) {
       push();
       translate(this.x + BOAT_W / 2, this.y);
 
+      // Προώθηση →
       drawArrow(0, -26,  F_DRIVE * 120, color(0,160,0));
 
+      // Αντίσταση ←
       if (this.v > 0.05) {
         drawArrow(0, -26, -DRAG_K * this.v * Math.abs(this.v) * 120, color(220,0,0));
       }
