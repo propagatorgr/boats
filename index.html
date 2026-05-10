@@ -3,18 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Οριακή Ταχύτητα</title>
 
-  <!-- p5.js -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
-  <script defer src="sketch.js"></script>
-
   <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
-
     body {
       margin: 0;
+      font-family: Arial, sans-serif;
       background: #f2f2f2;
     }
 
@@ -43,97 +37,39 @@
       padding: 14px;
       margin-bottom: 16px;
     }
-
-    h3 { margin-top: 0; }
-
-    .legend-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 8px 0;
-      font-size: 14px;
-    }
-
-    .arrow {
-      width: 24px;
-      height: 2px;
-      background: black;
-      position: relative;
-    }
-
-    .arrow::after {
-      content: "";
-      position: absolute;
-      right: -6px;
-      top: -4px;
-      border-left: 6px solid black;
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
-    }
-
-    .green { background: green; }
-    .green::after { border-left-color: green; }
-
-    .red { background: red; }
-    .red::after { border-left-color: red; }
-
-    .controls button {
-      margin-right: 8px;
-      padding: 6px 10px;
-    }
-
-    @media (max-width: 1000px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
 </head>
 
 <body>
 
-<div class="app">
+  <div class="app">
 
-  <!-- CANVAS -->
-  <div id="sketch-holder"></div>
+    <!-- CANVAS -->
+    <div id="sketch-holder"></div>
 
-  <!-- PANEL -->
-  <div>
-
-    <div class="panel">
-      <h3>ΣΤΟΙΧΕΙΑ</h3>
-      <div id="info"></div>
-    </div>
-
-    <div class="panel">
-      <h3>ΥΠΟΜΝΗΜΑ</h3>
-
-      <div class="legend-row">
-        <div class="arrow green"></div> Προωστική δύναμη
+    <!-- PANELS -->
+    <div>
+      <div class="panel">
+        <h3>ΣΤΟΙΧΕΙΑ</h3>
+        <div id="info"></div>
       </div>
 
-      <div class="legend-row">
-        <div class="arrow red"></div> Αντίσταση νερού
+      <div class="panel">
+        <h3>ΧΕΙΡΙΣΜΟΣ</h3>
+        <button id="playBtn">▶ Play</button>
+        <button id="resetBtn">⟲ Reset</button><br><br>
+        <label>
+          <input type="checkbox" id="forcesChk" checked>
+          Εμφάνιση δυνάμεων
+        </label>
       </div>
-
-      <div class="legend-row">✓ Οριακή ταχύτητα</div>
-      <div class="legend-row">
-        <div class="arrow"></div> Σταθερή απόσταση
-      </div>
-    </div>
-
-    <div class="panel controls">
-      <button id="playBtn">▶ Play</button>
-      <button id="resetBtn">⟲ Reset</button><br><br>
-      <label>
-        <input type="checkbox" id="forcesChk" checked>
-        Εμφάνιση δυνάμεων
-      </label>
     </div>
 
   </div>
 
-</div>
+  <!-- ✅ SCRIPT LOAD – ΣΤΟ ΤΕΛΟΣ -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
+  <script src="sketch.js"></script>
 
 </body>
 </html>
